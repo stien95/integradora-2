@@ -125,18 +125,7 @@ public class SoccerController {
                     }
                 }
             }
-            for (int i = 0; i < MAX_TEAMS; i++) {
-                if (i < MAX_TEAMS / 2) {
-                    group1Matches[i] = new Match(teams[randomIndexes[i]], teams[randomIndexes[MAX_TEAMS - i - 1]],
-                            group1Dates[i], group1Hours[i]);
-                } else {
-                    group2Matches[i - MAX_TEAMS / 2] = new Match(teams[randomIndexes[i]],
-                            teams[randomIndexes[MAX_TEAMS - i - 1]], group2Dates[i - MAX_TEAMS / 2],
-                            group2Hours[i - MAX_TEAMS / 2]);
-                }
-            }
         }
-
         return message;
     }
 }

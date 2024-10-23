@@ -118,6 +118,6 @@ public class Main {
         lastDate = sc.nextLine();
         System.out.println("Ingrese la hora de los dos últimos partidos de la fase de grupos");
         lastHour = sc.nextLine();
-        System.out.println(controller.draw());
+        System.out.println(controller.draw(group1Dates, group1Hours, group2Dates, group2Hours, lastDate, lastHour));
     }
 }
