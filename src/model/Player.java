@@ -41,8 +41,7 @@ public class Player extends Person {
 
     @Override
     public String toString() {
-        return "Player [dorsal=" + dorsal + ", position=" + position + ", country=" + country + ", id=" + id + ", name="
-                + name + "]";
+        return super.toString() + "\nDorsal: " + dorsal + "\nPosición: " + position;
     }
     
 }

@@ -35,5 +35,8 @@ public class Person {
         this.id = id;
     }
 
-    
+    @Override
+    public String toString() {
+        return "Id: " + id + "\nNombre: " + name + "\nPaís: " + country;
+    }
 }

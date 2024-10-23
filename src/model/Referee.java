@@ -22,5 +22,10 @@ public class Referee extends Person {
                 break;
         }
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\nTipo: " + type;
+    }
     
 }
