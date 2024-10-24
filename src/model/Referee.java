@@ -22,6 +22,18 @@ public class Referee extends Person {
                 break;
         }
     }
+    public boolean equalsType(int typeOption) {
+        boolean equals = false;
+        switch (typeOption) {
+            case 1:
+                equals = type == RefereeType.CENTRAL;
+                break;
+            case 2:
+                equals = type == RefereeType.ASSISTANT;
+                break;
+        }
+        return equals;
+    }
 
     @Override
     public String toString() {

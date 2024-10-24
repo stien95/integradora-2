@@ -89,11 +89,11 @@ public class SoccerController {
         return person;
     }
 
-    public Team searchTeam(String name) {
+    public Team searchTeam(String teamName) {
         Team team = null;
         boolean found = false;
         for (int i = 0; i < teams.length && !found; i++) {
-            if (teams[i].getName().equals(name)) {
+            if (teams[i].getName().equals(teamName)) {
                 team = teams[i];
                 found = true;
             }
@@ -160,5 +160,53 @@ public class SoccerController {
             message = "Partidos generados";
         }
         return message;
+    }
+
+    public String assignReferee(String refereeId, String localName, String visitorName) {
+        String message = "";
+        Referee referee = (Referee) searchPerson(refereeId);
+        Team localTeam = searchTeam(localName);
+        Team visitorTeam = searchTeam(visitorName);
+        if (referee != null && localTeam != null && visitorTeam != null) {
+            Match match = searchMatch(localTeam, visitorTeam);
+            if (match != null) {
+                message = match.asignReferee(referee);
+            } else {
+                message = "El partido no existe";
+            }
+        } else {
+            message = "El árbitro o los equipos no existen";
+        }
+        return message;
+    }
+    public String registerResult(String localName, String visitorName, int localGoals , int visitorGoals) {
+        String message = "";
+        Team localTeam = searchTeam(localName);
+        Team visitorTeam = searchTeam(visitorName);
+        if (localTeam != null && visitorTeam != null) {
+            Match match = searchMatch(localTeam, visitorTeam);
+            if (match != null) {
+                match.setLocalGoals(localGoals);
+                match.setVisitorGoals(visitorGoals);
+                message = "Resultado registrado";
+            } else {
+                message = "El partido no existe";
+            }
+        } else {
+            message = "Los equipos no existen";
+        }
+        return message;
+    }
+    
+    public Match searchMatch(Team local, Team visitor) {
+        Match match = null;
+        boolean found = false;
+        for (int i = 0; i < matches.length && !found; i++) {
+            if (matches[i].getLocal().equals(local) && matches[i].getVisitor().equals(visitor)) {
+                match = matches[i];
+                found = true;
+            }
+        }
+        return match;
     }
 }
