@@ -36,6 +36,9 @@ public class Main {
                 addPlayer();
                 break;
             case 4:
+                preload();
+                break;
+            case 5:
                 draw();
                 break;
             default:
@@ -49,9 +52,13 @@ public class Main {
         String name = sc.nextLine();
         System.out.println("Ingrese el país del equipo");
         String country = sc.nextLine();
+        System.out.println("Ingrese el id del técnico");
+        String coachId = sc.nextLine();
         System.out.println("Ingrese el nombre del técnico");
         String coachName = sc.nextLine();
-        System.out.println(controller.addTeam(name, country, coachName));
+        System.out.println("Ingrese el país del técnico");
+        String coachCountry = sc.nextLine();
+        System.out.println(controller.addTeam(name, country, coachId, coachName, coachCountry));
     }
 
     public void addPlayer() {
@@ -89,6 +96,10 @@ public class Main {
         int typeOption = sc.nextInt();
         sc.nextLine();
         System.out.println(controller.addReferee(id, name, country, typeOption));
+    }
+
+    public void preload() {
+        System.out.println(controller.preload());
     }
 
     public void draw() {

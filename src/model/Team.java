@@ -3,10 +3,10 @@ package model;
 public class Team {
     private String name;
     private String country;
-    private String coachName;
+    private Person coachName;
     private Player[] players;
 
-    public Team(String name, String country, String coachName) {
+    public Team(String name, String country, Person coachName) {
         this.name = name;
         this.country = country;
         this.coachName = coachName;
@@ -29,11 +29,11 @@ public class Team {
         this.country = country;
     }
 
-    public String getCoachName() {
+    public Person getCoachName() {
         return coachName;
     }
 
-    public void setCoachName(String coachName) {
+    public void setCoachName(Person coachName) {
         this.coachName = coachName;
     }
     public String addPlayer(Player player) {
