@@ -6,18 +6,16 @@ public class SoccerController {
     // Associations
     private Team[] teams;
     private Person[] people;
-    private Match[] group1Matches;
-    private Match[] group2Matches;
+    private Match[] matches;
     // Constants
     public static final int MAX_TEAMS = 8;
-    public static final int MAX_PEOPLE = 10;
+    public static final int MAX_PEOPLE = 12;
 
     public SoccerController(String name) {
         this.name = name;
         teams = new Team[MAX_TEAMS];
-        people = new Person[10];
-        group1Matches = new Match[6];
-        group2Matches = new Match[6];
+        people = new Person[MAX_PEOPLE];
+        matches = new Match[12];
     }
 
     public String addTeam(String name, String country, String coachName) {
@@ -123,6 +121,12 @@ public class SoccerController {
                     if (randomIndexes[i] == randomIndexes[j]) {
                         i--;
                     }
+                }
+            }
+            int indexMatches = 0;
+            for (int i = 0; i < MAX_TEAMS; i++) {
+                for (int j = i+1; j < MAX_TEAMS; j++) {
+                    matches[indexMatches++] = new Match(teams[i],teams[j], lastDate, message);
                 }
             }
         }
