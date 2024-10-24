@@ -167,15 +167,23 @@ public class SoccerController {
         Referee referee = (Referee) searchPerson(refereeId);
         Team localTeam = searchTeam(localName);
         Team visitorTeam = searchTeam(visitorName);
-        if (referee != null && localTeam != null && visitorTeam != null) {
-            Match match = searchMatch(localTeam, visitorTeam);
-            if (match != null) {
-                message = match.asignReferee(referee);
+        if (referee != null) {
+            if (localTeam != null) {
+                if (visitorTeam != null) {
+                    Match match = searchMatch(localTeam, visitorTeam);
+                    if (match != null) {
+                        message = match.asignReferee(referee);
+                    } else {
+                        message = "El partido no existe";
+                    }
+                } else {
+                    message = "El equipo visitante no existe";
+                }
             } else {
-                message = "El partido no existe";
+                message = "El equipo local no existe";
             }
         } else {
-            message = "El árbitro o los equipos no existen";
+            message = "El árbitro no existe";
         }
         return message;
     }
