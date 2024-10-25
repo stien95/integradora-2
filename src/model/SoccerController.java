@@ -9,7 +9,7 @@ public class SoccerController {
     private Match[] matches;
     // Constants
     public static final int MAX_TEAMS = 8;
-    public static final int MAX_PEOPLE = 12;
+    public static final int MAX_PEOPLE = 200;
 
     public SoccerController(String name) {
         this.name = name;
@@ -41,27 +41,47 @@ public class SoccerController {
         return message;
     }
 
-    public String addPlayer(String id, String name, String teamName, String country, int dorsal, int positionOption) {
+    public String addPerson(String id, String name, String country, int position, int goals, String teamName) {
+        Person existsPerson = searchPerson(id);
+
         String message = "";
-        Team team = searchTeam(teamName);
-        if (team != null) {
-            Player player = new Player(id, name, country, dorsal, positionOption);
-            message = team.addPlayer(player);
+    
+        if (existsPerson == null) {
+            Team team = searchTeam(teamName);
+            if (team != null) {
+                Player player = new Player(id, name, country, position, goals, team);
+                boolean added = false;
+                for (int i = 0; i < people.length && !added; i++) {
+                    if (people[i] == null) {
+                        people[i] = player;
+                        added = true;
+                    }
+                }
+                if (added) {
+                    message = "Jugador agregado";
+                } else {
+                    message = "No se pueden agregar más jugadores";
+                }
+            } else {
+                message = "El equipo no existe";
+            }
         } else {
-            message = "El equipo no existe";
+            message = "La persona ya existe";
         }
+
+
         return message;
     }
 
-    public String addReferee(String id, String name, String country, int typeOption) {
+    public String addPerson(String id, String name, String country, int refereeType) {
         Person existsPerson = searchPerson(id);
         String message = "";
         if (existsPerson == null) {
-            Referee referee = new Referee(id, name, country, typeOption);
+            Person person = new Referee(id, name, country, refereeType);
             boolean added = false;
             for (int i = 0; i < people.length && !added; i++) {
                 if (people[i] == null) {
-                    people[i] = referee;
+                    people[i] = person;
                     added = true;
                 }
             }
@@ -71,10 +91,9 @@ public class SoccerController {
                 message = "No se pueden agregar más árbitros";
             }
         } else {
-            message = "El árbitro ya existe";
+            message = "La persona ya existe";
         }
         return message;
-
     }
 
     public Person searchPerson(String id) {
@@ -110,7 +129,7 @@ public class SoccerController {
                 "Rodríguez", "Sánchez", "Ramírez", "Torres", "Flores", "Vásquez", "Castro", "Ruiz", "Díaz", "Reyes",
                 "Jiménez", "Morales", "Ortiz" };
         // Generar los equipos
-        for (int i = 0; i < 12; i++) {
+        for (int i = 0; i < 8; i++) {
             String coachName = peopleNames[(int) (Math.random() * peopleNames.length)] + " "
                     + peopleLastName[(int) (Math.random() * peopleLastName.length)];
             this.teams[i] = new Team("Equipo " + i, "País " + i, new Person("E" + 1, coachName, "País " + i));
@@ -118,8 +137,9 @@ public class SoccerController {
             for (int j = 0; j < 20; j++) {
                 String playerName = peopleNames[(int) (Math.random() * peopleNames.length)] + " "
                         + peopleLastName[(int) (Math.random() * peopleLastName.length)];
-                this.teams[i].addPlayer(new Player("P" + j + "" + i, playerName, "País " + i, j, j % 3));
-            }
+                // This code can be not working properly
+                        this.people[j*i] = new Player("P" + j, playerName, "País " + i, j % 4 + 1, j % 10, this.teams[i]);
+                    }
         }
         message = "Equipos pre-cargados";
         // generar los partidos

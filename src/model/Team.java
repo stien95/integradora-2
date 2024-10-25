@@ -3,14 +3,12 @@ package model;
 public class Team {
     private String name;
     private String country;
-    private Person coachName;
-    private Player[] players;
+    private Person coach;
 
-    public Team(String name, String country, Person coachName) {
+    public Team(String name, String country, Person coach) {
         this.name = name;
         this.country = country;
-        this.coachName = coachName;
-        players = new Player[20];
+        this.coach = coach;
     }
 
     public String getName() {
@@ -29,38 +27,11 @@ public class Team {
         this.country = country;
     }
 
-    public Person getCoachName() {
-        return coachName;
+    public Person getCoach() {
+        return coach;
     }
 
-    public void setCoachName(Person coachName) {
-        this.coachName = coachName;
+    public void setCoach(Person coach) {
+        this.coach = coach;
     }
-    public String addPlayer(Player player) {
-        String message = "";
-        boolean added = false;
-        for (int i = 0; i < players.length && !added; i++) {
-            if (players[i] == null) {
-                players[i] = player;
-                added = true;
-            }
-        }
-        if (added) {
-            message = "Jugador agregado";
-        } else {
-            message = "No se pueden agregar más jugadores";
-        }
-        return message;
-    }
-    public Player searchPlayer(String id) {
-        Player player = null;
-        for (int i = 0; i < players.length && player == null; i++) {
-            if (players[i] != null && players[i].getId().equals(id)) {
-                player = players[i];
-            }
-        }
-        return player;
-    }
-    
-    
 }
