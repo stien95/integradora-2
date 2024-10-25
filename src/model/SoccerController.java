@@ -103,9 +103,23 @@ public class SoccerController {
 
     public String preload() {
         String message = "";
+        String[] peopleNames = { "Juan", "Pedro", "Carlos", "Luis", "Andrés", "Jorge", "Mario", "José", "Miguel",
+                "Fernando", "Ricardo", "Alberto", "Roberto", "Antonio", "Francisco", "Javier", "Alejandro", "Raúl",
+                "Sergio", "Daniel" };
+        String[] peopleLastName = { "Pérez", "Gómez", "García", "Hernández", "Martínez", "López", "González",
+                "Rodríguez", "Sánchez", "Ramírez", "Torres", "Flores", "Vásquez", "Castro", "Ruiz", "Díaz", "Reyes",
+                "Jiménez", "Morales", "Ortiz" };
         // Generar los equipos
         for (int i = 0; i < 12; i++) {
-            this.teams[i] = new Team("Equipo " + i, "País " + i, new Person("E"+1, "Entrenador "+i, "País "+ i));
+            String coachName = peopleNames[(int) (Math.random() * peopleNames.length)] + " "
+                    + peopleLastName[(int) (Math.random() * peopleLastName.length)];
+            this.teams[i] = new Team("Equipo " + i, "País " + i, new Person("E" + 1, coachName, "País " + i));
+            // Generar los jugadores
+            for (int j = 0; j < 20; j++) {
+                String playerName = peopleNames[(int) (Math.random() * peopleNames.length)] + " "
+                        + peopleLastName[(int) (Math.random() * peopleLastName.length)];
+                this.teams[i].addPlayer(new Player("P" + j + "" + i, playerName, "País " + i, j, j % 3));
+            }
         }
         message = "Equipos pre-cargados";
         // generar los partidos
@@ -123,7 +137,7 @@ public class SoccerController {
         message += "\nPartidos generados";
         // generar los árbitros 8 centrales y 4 asistentes
         for (int i = 0; i < 12; i++) {
-            this.people[i] = new Referee("R"+i, "Árbitro "+i, "País "+ i, i % 3 == 0 ? 2 : 1);
+            this.people[i] = new Referee("R" + i, "Árbitro " + i, "País " + i, i % 3 == 0 ? 2 : 1);
         }
         message += "\nÁrbitros pre-cargados";
         return message;
@@ -153,8 +167,8 @@ public class SoccerController {
             }
             int indexMatches = 0;
             for (int i = 0; i < MAX_TEAMS; i++) {
-                for (int j = i+1; j < MAX_TEAMS; j++) {
-                    matches[indexMatches++] = new Match(teams[i],teams[j], lastDate, message);
+                for (int j = i + 1; j < MAX_TEAMS; j++) {
+                    matches[indexMatches++] = new Match(teams[i], teams[j], lastDate, message);
                 }
             }
             message = "Partidos generados";
@@ -187,7 +201,8 @@ public class SoccerController {
         }
         return message;
     }
-    public String registerResult(String localName, String visitorName, int localGoals , int visitorGoals) {
+
+    public String registerResult(String localName, String visitorName, int localGoals, int visitorGoals) {
         String message = "";
         Team localTeam = searchTeam(localName);
         Team visitorTeam = searchTeam(visitorName);
@@ -205,7 +220,7 @@ public class SoccerController {
         }
         return message;
     }
-    
+
     public Match searchMatch(Team local, Team visitor) {
         Match match = null;
         boolean found = false;
