@@ -3,12 +3,10 @@ package model;
 public class Player extends Person {
     private int dorsal;
     private Position position;
-    private Team team;
 
-    public Player(String id, String name, String country, int dorsal, int positionOption, Team team) {
+    public Player(String id, String name, String country, int dorsal, int positionOption) {
         super(id, name, country);
         this.dorsal = dorsal;
-        this.team = team;
         setPosition(positionOption);
     }
 
@@ -41,17 +39,9 @@ public class Player extends Person {
         }
     }
 
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
     @Override
     public String toString() {
         return super.toString() + "\nDorsal: " + dorsal + "\nPosición: " + position;
     }
-    
+
 }
