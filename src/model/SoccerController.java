@@ -11,6 +11,11 @@ public class SoccerController {
     public static final int MAX_TEAMS = 8;
     public static final int MAX_PEOPLE = 200;
 
+    /**
+     * Constructor of the controller
+     * 
+     * @param name - name of the tournament
+     */
     public SoccerController(String name) {
         this.name = name;
         teams = new Team[MAX_TEAMS];
@@ -18,6 +23,19 @@ public class SoccerController {
         matches = new Match[12];
     }
 
+    /**
+     * Registers a new team by prompting the user for team details such as name,
+     * country, and coach name.
+     * <br/>
+     * Pre: None
+     * <br/>
+     * Post: A new team has been registered.
+     * 
+     * @param name      the name of the team
+     * @param country   the country of the team
+     * @param coachName the coach name of the team
+     * @return a message indicating whether the team was added or not
+     */
     public String registerTeam(String name, String country, String coachName) {
         Team existsTeam = searchTeam(name);
         String message = "";
@@ -41,6 +59,22 @@ public class SoccerController {
         return message;
     }
 
+    /**
+     * Registers a new player by specifying its ID, name, country, dorsal number,
+     * position, and team name.
+     * <br/>
+     * Pre: The team must exist.
+     * <br/>
+     * Post: The player has been registered and added to the team.
+     * 
+     * @param id       The ID of the player.
+     * @param name     The name of the player.
+     * @param country  The country of the player.
+     * @param dorsal   The dorsal number of the player.
+     * @param position The position of the player.
+     * @param teamName The name of the team that the player belongs to.
+     * @return A message indicating whether the player was registered successfully.
+     */
     public String addPerson(String id, String name, String country, int dorsal, int position, String teamName) {
         Person existsPerson = searchPerson(id);
 
@@ -125,6 +159,16 @@ public class SoccerController {
         return person;
     }
 
+    /**
+     * Busca un equipo por su nombre.
+     * <br/>
+     * Pre: El torneo debe estar inicializado.
+     * <br/>
+     * Post: El equipo ha sido encontrado.
+     * 
+     * @param teamName El nombre del equipo a buscar.
+     * @return El equipo si existe, null en caso contrario.
+     */
     public Team searchTeam(String teamName) {
         Team team = null;
         boolean found = false;
@@ -137,6 +181,20 @@ public class SoccerController {
         return team;
     }
 
+    /**
+     * Initializes the tournament by pre-loading data for teams, players, and
+     * referees.
+     * <br/>
+     * Pre: The arrays for teams must be initialized. Players should be pre-defined
+     * in each team. The maximum number of referees is 12.
+     * <br/>
+     * Post: Each team is initialized with a coach and players, and referees are
+     * assigned.
+     * Random names and countries are generated for coaches, players, and referees.
+     * <br/>
+     * 
+     * @return A message indicating that the tournament has been initialized.
+     */
     public String initializeTournament() {
         String[] names = { "Juan", "Pedro", "Carlos", "Andrés", "Luis", "Javier", "Miguel", "José", "Mario",
                 "Jorge", "Fernando", "Ricardo", "Alberto", "Roberto", "Guillermo", "Gustavo", "Hugo", "Eduardo", "Raúl",
@@ -171,6 +229,22 @@ public class SoccerController {
         return "Torneo inicializado";
     }
 
+    /**
+     * Generates the group stage fixture by creating matches between teams.
+     * <br/>
+     * Pre: The tournament must be initialized.
+     * <br/>
+     * Post: The group stage fixture has been generated.
+     * 
+     * @param group1Dates The dates of the first group.
+     * @param group1Hours The hours of the first group.
+     * @param group2Dates The dates of the second group.
+     * @param group2Hours The hours of the second group.
+     * @param lastDate    The date of the last match.
+     * @param lastHour    The hour of the last match.
+     * @return A message indicating whether the group stage fixture was generated
+     *         successfully.
+     */
     public String generateGroupStageFixture(String[] group1Dates, String[] group1Hours, String[] group2Dates,
             String[] group2Hours, String lastDate, String lastHour) {
         String message = "";
@@ -216,6 +290,18 @@ public class SoccerController {
         return message;
     }
 
+    /**
+     * Assigns referees to a match.
+     * <br/>
+     * Pre: The tournament must be initialized.
+     * <br/>
+     * Post: The referees have been assigned to the match.
+     * 
+     * @param refereeIds  The ids of the referees.
+     * @param localName   The name of the local team.
+     * @param visitorName The name of the visitor team.
+     * @return A message indicating whether the referees were assigned successfully.
+     */
     public String assignRefereesToMatch(String[] refereeIds, String localName, String visitorName) {
         String message = "";
         if (refereeIds.length != 3) {
@@ -254,6 +340,24 @@ public class SoccerController {
         return message;
     }
 
+    /**
+     * Registers the result of a match by specifying the local and visitor teams,
+     * goals, own goals, yellow cards, and red cards.
+     * <br/>
+     * Pre: The match must exist.
+     * <br/>
+     * Post: The result of the match has been registered.
+     * 
+     * @param localName      The name of the local team.
+     * @param visitorName    The name of the visitor team.
+     * @param scorersIds     The IDs of the goal scorers.
+     * @param scorersMinutes The minutes of the goals.
+     * @param assistantIds   The IDs of the goal assistants.
+     * @param ownGoals       Whether the goals were own goals or not.
+     * @param yellowCards    The number of yellow cards of each team.
+     * @param redCards       The number of red cards of each team.
+     * @return A message indicating whether the result was registered successfully.
+     */
     public String registerResult(String localName, String visitorName, String[] scorersIds, int[] scorersMinutes,
             String[] assistantIds, boolean[] ownGoals, int[] yellowCards, int[] redCards) {
         Team local = searchTeam(localName);
@@ -286,6 +390,17 @@ public class SoccerController {
         return message;
     }
 
+    /**
+     * Searches for a match in the tournament given the local and visitor teams.
+     * <br/>
+     * Pre: The tournament must be initialized.
+     * <br/>
+     * Post: The match has been found.
+     * 
+     * @param local   The local team of the match to search.
+     * @param visitor The visitor team of the match to search.
+     * @return The match if found, null otherwise.
+     */
     public Match searchMatch(Team local, Team visitor) {
         Match match = null;
         boolean found = false;
