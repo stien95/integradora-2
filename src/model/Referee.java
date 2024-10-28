@@ -22,6 +22,7 @@ public class Referee extends Person {
                 break;
         }
     }
+
     public boolean equalsType(int typeOption) {
         boolean equals = false;
         switch (typeOption) {
@@ -37,7 +38,6 @@ public class Referee extends Person {
 
     @Override
     public String toString() {
-        return super.toString() + "\nTipo: " + type;
+        return super.toString() + "\nTipo de árbitro: " + type;
     }
-    
 }
