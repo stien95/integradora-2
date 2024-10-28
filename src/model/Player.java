@@ -2,7 +2,7 @@ package model;
 
 public class Player extends Person {
     private int dorsal;
-    private Position position;
+    private PlayerPosition position;
 
     public Player(String id, String name, String country, int dorsal, int positionOption) {
         super(id, name, country);
@@ -18,23 +18,23 @@ public class Player extends Person {
         this.dorsal = dorsal;
     }
 
-    public Position getPosition() {
+    public PlayerPosition getPosition() {
         return position;
     }
 
     public void setPosition(int position) {
         switch (position) {
             case 1:
-                this.position = Position.GOALKEEPER;
+                this.position = PlayerPosition.GOALKEEPER;
                 break;
             case 2:
-                this.position = Position.DEFENDER;
+                this.position = PlayerPosition.DEFENDER;
                 break;
             case 3:
-                this.position = Position.MIDFIELDER;
+                this.position = PlayerPosition.MIDFIELDER;
                 break;
             case 4:
-                this.position = Position.FORWARD;
+                this.position = PlayerPosition.FORWARD;
                 break;
         }
     }

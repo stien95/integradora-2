@@ -8,6 +8,8 @@ public class Match {
     private boolean played;
     private String date;
     private String time;
+    private int[] yellowCards;
+    private int[] redCards;
 
     public Match(Team local, Team visitor, String date, String time) {
         this.local = local;
@@ -15,7 +17,8 @@ public class Match {
         this.date = date;
         this.time = time;
         referees = new Referee[3];
-        goals = new Goal[100];
+        yellowCards = new int[2];
+        redCards = new int[2];
     }
 
     public Team getLocal() {
@@ -97,6 +100,25 @@ public class Match {
         this.goals = goals;
     }
 
+    public String registerResult(Player[] scorers, Player[] assistants, int[] scorersMinutes, boolean[] ownGoals,
+            int[] yellowCards, int[] redCards) {
+        String message = "";
+        if (scorers[0] == null) {
+            message = "No hubo goles";
+        } else {
+            for (int i = 0; i < scorers.length; i++) {
+                addGoal(scorers[i], assistants[i], scorersMinutes[i], ownGoals[i]);
+            }
+        }
+
+        for (int i = 0; i < yellowCards.length; i++) {
+            this.yellowCards[i] = yellowCards[i];
+            this.redCards[i] = redCards[i];
+        }
+        this.played = true;
+        return message;
+    }
+
     public String addGoal(Player scorer, Player assistant, int minute, boolean ownGoal) {
         Goal goal = new Goal(scorer, assistant, minute, ownGoal);
         String message = "";
@@ -137,45 +159,6 @@ public class Match {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public String asignReferee(Referee referee) {
-        // Debe haber 1 árbitro central y 2 asistentes, ninguno de los arbitros deben
-        // ser del mismo país de alguno de los equipos
-        String message = "";
-        // Verificar que el árbitro no sea del mismo país de alguno de los equipos
-        if (!local.getCountry().equals(referee.getCountry()) && !visitor.getCountry().equals(referee.getCountry())) {
-            boolean foundCentral = false;
-            int countAssistants = 0;
-            for (int i = 0; i < referees.length; i++) {
-                if (referees[i] != null && referees[i].equalsType(1)) {
-                    foundCentral = true;
-                } else if (referees[i] != null && referees[i].equalsType(2)) {
-                    countAssistants++;
-                }
-            }
-            if (foundCentral && referee.equalsType(1)) {
-                message = "Ya hay un árbitro central";
-            } else if (countAssistants == 2 && referee.equalsType(2)) {
-                message = "Ya hay dos árbitros asistentes";
-            } else {
-                boolean added = false;
-                for (int i = 0; i < referees.length && !added; i++) {
-                    if (referees[i] == null) {
-                        referees[i] = referee;
-                        added = true;
-                    }
-                }
-                if (added) {
-                    message = "Árbitro asignado";
-                } else {
-                    message = "No se pueden asignar más árbitros";
-                }
-            }
-        } else {
-            message = "El árbitro no puede ser del mismo país de alguno de los equipos";
-        }
-        return message;
     }
 
     @Override

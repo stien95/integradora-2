@@ -18,11 +18,11 @@ public class SoccerController {
         matches = new Match[12];
     }
 
-    public String addTeam(String name, String country, String coachId, String coachName, String coachCountry) {
+    public String registerTeam(String name, String country, String coachName) {
         Team existsTeam = searchTeam(name);
         String message = "";
         if (existsTeam == null) {
-            Team team = new Team(name, country, new Person(coachId, coachName, coachCountry));
+            Team team = new Team(name, country, coachName);
             boolean added = false;
             for (int i = 0; i < teams.length && !added; i++) {
                 if (teams[i] == null) {
@@ -41,15 +41,15 @@ public class SoccerController {
         return message;
     }
 
-    public String addPerson(String id, String name, String country, int position, int goals, String teamName) {
+    public String addPerson(String id, String name, String country, int dorsal, int position, String teamName) {
         Person existsPerson = searchPerson(id);
 
         String message = "";
-    
+
         if (existsPerson == null) {
             Team team = searchTeam(teamName);
             if (team != null) {
-                Player player = new Player(id, name, country, position, goals, team);
+                Player player = new Player(id, name, country, dorsal, position);
                 boolean added = false;
                 for (int i = 0; i < people.length && !added; i++) {
                     if (people[i] == null) {
@@ -58,7 +58,8 @@ public class SoccerController {
                     }
                 }
                 if (added) {
-                    message = "Jugador agregado";
+                    message = team.addPlayer(player);
+                    ;
                 } else {
                     message = "No se pueden agregar más jugadores";
                 }
@@ -69,7 +70,6 @@ public class SoccerController {
             message = "La persona ya existe";
         }
 
-
         return message;
     }
 
@@ -77,19 +77,36 @@ public class SoccerController {
         Person existsPerson = searchPerson(id);
         String message = "";
         if (existsPerson == null) {
-            Person person = new Referee(id, name, country, refereeType);
+            int assistantCount = 0;
+            int centralCount = 0;
+
+            for (int i = 0; i < people.length; i++) {
+                if (people[i] instanceof Referee) {
+                    Referee referee = (Referee) people[i];
+                    if (referee.equalsType(2)) { // ASSISTANT
+                        assistantCount++;
+                    } else if (referee.equalsType(1)) { // CENTRAL
+                        centralCount++;
+                    }
+                }
+            }
+
+            // Verificar que no se supere el límite
+            if ((refereeType == 2 && assistantCount >= 8) || (refereeType == 1 && centralCount >= 4)) {
+                return "No se pueden agregar más árbitros del tipo especificado";
+            }
+
+            // Agregar nuevo árbitro si los límites no han sido alcanzados
+            Referee referee = new Referee(id, name, country, refereeType);
             boolean added = false;
             for (int i = 0; i < people.length && !added; i++) {
                 if (people[i] == null) {
-                    people[i] = person;
+                    people[i] = referee;
                     added = true;
                 }
             }
-            if (added) {
-                message = "Árbitro agregado";
-            } else {
-                message = "No se pueden agregar más árbitros";
-            }
+
+            message = added ? "Persona agregada" : "No se pueden agregar más personas";
         } else {
             message = "La persona ya existe";
         }
@@ -120,123 +137,113 @@ public class SoccerController {
         return team;
     }
 
-    public String preload() {
-        String message = "";
-        String[] peopleNames = { "Juan", "Pedro", "Carlos", "Luis", "Andrés", "Jorge", "Mario", "José", "Miguel",
-                "Fernando", "Ricardo", "Alberto", "Roberto", "Antonio", "Francisco", "Javier", "Alejandro", "Raúl",
-                "Sergio", "Daniel" };
-        String[] peopleLastName = { "Pérez", "Gómez", "García", "Hernández", "Martínez", "López", "González",
-                "Rodríguez", "Sánchez", "Ramírez", "Torres", "Flores", "Vásquez", "Castro", "Ruiz", "Díaz", "Reyes",
-                "Jiménez", "Morales", "Ortiz" };
-        // Generar los equipos
-        for (int i = 0; i < 8; i++) {
-            String coachName = peopleNames[(int) (Math.random() * peopleNames.length)] + " "
-                    + peopleLastName[(int) (Math.random() * peopleLastName.length)];
-            this.teams[i] = new Team("Equipo " + i, "País " + i, new Person("E" + 1, coachName, "País " + i));
-            // Generar los jugadores
-            for (int j = 0; j < 20; j++) {
-                String playerName = peopleNames[(int) (Math.random() * peopleNames.length)] + " "
-                        + peopleLastName[(int) (Math.random() * peopleLastName.length)];
-                // This code can be not working properly
-                        this.people[j*i] = new Player("P" + j, playerName, "País " + i, j % 4 + 1, j % 10, this.teams[i]);
-                    }
-        }
-        message = "Equipos pre-cargados";
-        // generar los partidos
-        String[] group1Dates = new String[5];
-        String[] group1Hours = new String[5];
-        String[] group2Dates = new String[5];
-        String[] group2Hours = new String[5];
-        for (int i = 0; i < 5; i++) {
-            group1Dates[i] = "2024-11-0" + (i + 1);
-            group1Hours[i] = "15:00";
-            group2Dates[i] = "2024-11-0" + (i + 2);
-            group2Hours[i] = "18:00";
-        }
-        draw(group1Dates, group1Hours, group2Dates, group2Hours, "2024-11-10", "15:00");
-        message += "\nPartidos generados";
-        // generar los árbitros 8 centrales y 4 asistentes
-        for (int i = 0; i < 12; i++) {
-            this.people[i] = new Referee("R" + i, "Árbitro " + i, "País " + i, i % 3 == 0 ? 2 : 1);
-        }
-        message += "\nÁrbitros pre-cargados";
-        return message;
-    }
-
-    public String draw(String[] group1Dates, String[] group1Hours, String[] group2Dates, String[] group2Hours,
-            String lastDate, String lastHour) {
-        String message = "";
-
-        int countTeams = 0;
+    public String initializeTournament() {
+        String[] names = { "Juan", "Pedro", "Carlos", "Andrés", "Luis", "Javier", "Miguel", "José", "Mario",
+                "Jorge", "Fernando", "Ricardo", "Alberto", "Roberto", "Guillermo", "Gustavo", "Hugo", "Eduardo", "Raúl",
+                "Sergio", "Alejandro" };
+        String[] lastNames = { "Garcia", "Gonzalez", "Lopez", "Perez", "Martinez", "Sanchez", "Rodriguez", "Fernandez",
+                "Gomez", "Vargas", "Jimenez", "Gutierrez", "Hernandez", "Ramirez", "Herrera", "Torres", "Castro" };
         for (int i = 0; i < teams.length; i++) {
-            if (teams[i] != null) {
-                countTeams++;
+            if (teams[i] == null) {
+                String coachName = names[(int) Math.random() * names.length + 1] + " "
+                        + lastNames[(int) Math.random() * lastNames.length + 1];
+                teams[i] = new Team("Equipo " + (i + 1), "País " + (i + 1), coachName);
             }
-        }
-        if (countTeams != MAX_TEAMS) {
-            message = "Aún no se han registrado los " + MAX_TEAMS + " equipos necesarios para realizar el sorteo";
-        } else {
-            int[] randomIndexes = new int[MAX_TEAMS];
-            for (int i = 0; i < MAX_TEAMS; i++) {
-                randomIndexes[i] = (int) (Math.random() * MAX_TEAMS);
-                for (int j = 0; j < i; j++) {
-                    if (randomIndexes[i] == randomIndexes[j]) {
-                        i--;
-                    }
+            for (int j = 0; j < teams[i].getPlayers().length; j++) {
+                if (teams[i].getPlayers()[j] == null) {
+                    String name = names[(int) Math.random() * names.length] + " "
+                            + lastNames[(int) Math.random() * lastNames.length + 1];
+                    int position = (int) Math.floor(Math.random() * 4 + 1);
+                    int dorsal = (int) Math.floor(Math.random() * 20 + 1);
+                    Player player = new Player("J" + (j + 1), name, "País " + (i + 1), dorsal, position);
+                    teams[i].addPlayer(player);
+                    addPerson("J" + (j + 1), name, "País " + (i + 1), dorsal, position, teams[i].getName());
                 }
             }
-            int indexMatches = 0;
-            for (int i = 0; i < MAX_TEAMS; i++) {
-                for (int j = i + 1; j < MAX_TEAMS; j++) {
-                    matches[indexMatches++] = new Match(teams[i], teams[j], lastDate, message);
-                }
-            }
-            message = "Partidos generados";
         }
-        return message;
+        // 4 Centrales y 8 asistentes
+        for (int i = 0; i < 12; i++) {
+            String name = names[(int) Math.random() * names.length] + " "
+                    + lastNames[(int) Math.random() * lastNames.length + 1];
+            addPerson("A" + (i + 1), name, "País " + (i + 1), i % 3 == 0 ? 2 : 1);
+        }
+
+        return "Torneo inicializado";
     }
 
-    public String assignReferee(String refereeId, String localName, String visitorName) {
+    public String generateGroupStageFixture(String[] group1Dates, String[] group1Hours, String[] group2Dates,
+            String[] group2Hours,
+            String lastDate, String lastHour) {
+
+        return null;
+    }
+
+    public String assignRefereesToMatch(String[] refereeIds, String localName, String visitorName) {
         String message = "";
-        Referee referee = (Referee) searchPerson(refereeId);
-        Team localTeam = searchTeam(localName);
-        Team visitorTeam = searchTeam(visitorName);
-        if (referee != null) {
-            if (localTeam != null) {
-                if (visitorTeam != null) {
-                    Match match = searchMatch(localTeam, visitorTeam);
-                    if (match != null) {
-                        message = match.asignReferee(referee);
-                    } else {
-                        message = "El partido no existe";
-                    }
+        if (refereeIds.length != 3) {
+            message = "Error: Debe haber exactamente 3 árbitros";
+        } else {
+            Referee[] referees = new Referee[3];
+            boolean stop = false;
+            for (int i = 0; i < refereeIds.length && !stop; i++) {
+                Referee referee = (Referee) searchPerson(refereeIds[i]);
+                if (referee == null) {
+                    stop = true;
+                    message = "Error: El árbitro con id " + refereeIds[i] + " no existe";
                 } else {
-                    message = "El equipo visitante no existe";
+                    referees[i] = referee;
                 }
-            } else {
-                message = "El equipo local no existe";
             }
-        } else {
-            message = "El árbitro no existe";
+
+            if (!stop) {
+                Team local = searchTeam(localName);
+                Team visitor = searchTeam(visitorName);
+                if (local == null) {
+                    message = "Error: El equipo local no existe";
+                } else if (visitor == null) {
+                    message = "Error: El equipo visitante no existe";
+                } else {
+                    Match match = searchMatch(local, visitor);
+                    if (match == null) {
+                        message = "Error: El partido no existe";
+                    } else {
+                        match.assignReferee(referees);
+                    }
+                }
+            }
         }
+
         return message;
     }
 
-    public String registerResult(String localName, String visitorName, int localGoals, int visitorGoals) {
+    public String registerResult(String localName, String visitorName, String[] scorersIds, int[] scorersMinutes,
+            String[] assistantIds, boolean[] ownGoals, int[] yellowCards, int[] redCards) {
+        Team local = searchTeam(localName);
+        Team visitor = searchTeam(visitorName);
         String message = "";
-        Team localTeam = searchTeam(localName);
-        Team visitorTeam = searchTeam(visitorName);
-        if (localTeam != null && visitorTeam != null) {
-            Match match = searchMatch(localTeam, visitorTeam);
-            if (match != null) {
-                match.setLocalGoals(localGoals);
-                match.setVisitorGoals(visitorGoals);
-                message = "Resultado registrado";
-            } else {
-                message = "El partido no existe";
-            }
+        if (local == null) {
+            message = "Error: El equipo local no existe";
+        } else if (visitor == null) {
+            message = "Error: El equipo visitante no existe";
         } else {
-            message = "Los equipos no existen";
+            Match match = searchMatch(local, visitor);
+            if (match == null) {
+                message = "Error: El partido no existe";
+            } else {
+                Player[] scorers = new Player[scorersIds.length];
+                Player[] assistants = new Player[assistantIds.length];
+                for (int i = 0; i < scorersIds.length; i++) {
+                    Player scorer = (Player) searchPerson(scorersIds[i]);
+                    Player assistant = (Player) searchPerson(assistantIds[i]);
+                    if (scorer == null || assistant == null) {
+                        message = "Error: Uno de los jugadores no existe";
+                    } else {
+                        scorers[i] = scorer;
+                        assistants[i] = assistant;
+                    }
+                }
+                match.registerResult(scorers, assistants, scorersMinutes, ownGoals, yellowCards, redCards);
+            }
         }
         return message;
     }
@@ -252,4 +259,5 @@ public class SoccerController {
         }
         return match;
     }
+
 }
