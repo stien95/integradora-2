@@ -172,10 +172,48 @@ public class SoccerController {
     }
 
     public String generateGroupStageFixture(String[] group1Dates, String[] group1Hours, String[] group2Dates,
-            String[] group2Hours,
-            String lastDate, String lastHour) {
+            String[] group2Hours, String lastDate, String lastHour) {
+        String message = "";
+        for (int i = 0; i < teams.length; i++) {
+            teams[i] = searchTeam("Team" + (i + 1));
+        }
 
-        return null;
+        int[] indexes = { 0, 1, 2, 3, 4, 5, 6, 7 };
+        for (int i = 0; i < indexes.length; i++) {
+            int randomIndex = (int) (Math.random() * indexes.length);
+            int temp = indexes[i];
+            indexes[i] = indexes[randomIndex];
+            indexes[randomIndex] = temp;
+        }
+
+        int[] group1Indexes = new int[4];
+        int[] group2Indexes = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            group1Indexes[i] = indexes[i];
+            group2Indexes[i] = indexes[i + 4];
+        }
+
+        int matchIndex = 0;
+        for (int i = 0; i < group1Indexes.length; i++) {
+            for (int j = i + 1; j < group1Indexes.length; j++) {
+                String date = (matchIndex == 5) ? lastDate : group1Dates[matchIndex];
+                String time = (matchIndex == 5) ? lastHour : group1Hours[matchIndex];
+                matches[matchIndex] = new Match(teams[group1Indexes[i]], teams[group1Indexes[j]], date, time);
+                matchIndex++;
+            }
+        }
+        for (int i = 0; i < group2Indexes.length; i++) {
+            for (int j = i + 1; j < group2Indexes.length; j++) {
+                String date = (matchIndex == 11) ? lastDate : group2Dates[matchIndex - 6];
+                String time = (matchIndex == 11) ? lastHour : group2Hours[matchIndex - 6];
+                matches[matchIndex] = new Match(teams[group2Indexes[i]], teams[group2Indexes[j]], date, time);
+                matchIndex++;
+            }
+        }
+
+        message = "Fase de grupos generada exitosamente.";
+        return message;
     }
 
     public String assignRefereesToMatch(String[] refereeIds, String localName, String visitorName) {
