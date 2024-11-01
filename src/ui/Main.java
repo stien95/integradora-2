@@ -309,9 +309,11 @@ public class Main {
         for (int i = 0; i < cards; i++) {
             System.out.println("Ingrese el id del jugador " + (i + 1) + " que recibió la tarjeta");
             playersIds[i] = sc.nextLine();
-            System.out.println("Ingrese el tipo de tarjeta (1. Amarilla, 2. Roja)");
-            cardTypes[i] = sc.nextInt();
-            sc.nextLine();
+            do {
+                System.out.println("Ingrese el tipo de tarjeta (1. Amarilla, 2. Roja)");
+                cardTypes[i] = sc.nextInt();
+                sc.nextLine();
+            } while (cardTypes[i] < 1 || cardTypes[i] > 2);
             System.out.println("Ingrese el minuto en el que se mostró la tarjeta");
             cardMinutes[i] = sc.nextLine();
             System.out.println("Ingrese el id del árbitro que mostró la tarjeta");
