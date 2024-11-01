@@ -31,8 +31,6 @@ public class Team {
      * 
      * @return the name of the team
      */
-    /************* ✨ Codeium Command ⭐ *************/
-    /****** 531d827d-830d-4cc0-843b-0784b6800043 *******/
     public String getName() {
         return name;
     }

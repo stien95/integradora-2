@@ -63,7 +63,6 @@ public class Person {
         this.country = country;
     }
 
-    /************* ✨ Codeium Command ⭐ *************/
     /**
      * Gets the id of the person.
      * <br/>

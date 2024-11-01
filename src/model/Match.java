@@ -114,7 +114,7 @@ public class Match {
      * @return A message indicating whether the referees were assigned successfully.
      */
     public String assignReferee(Referee[] referees) {
-        String message = "Árbitros asignados correctamente.";
+        String message = "Arbitros asignados correctamente.";
 
         if (referees == null || referees.length != 3) {
             message = "Error: Debe haber exactamente 3 árbitros.";
