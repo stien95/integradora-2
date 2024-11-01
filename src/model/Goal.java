@@ -1,8 +1,11 @@
+
 package model;
+
+import java.time.LocalTime;
 
 public class Goal {
   // Attributes
-  private int minute;
+  private LocalTime minute;
   private boolean ownGoal;
   // Associations
   private Player scorer;
@@ -17,10 +20,10 @@ public class Goal {
    * @param minute    the minute in which the goal was scored
    * @param ownGoal   a boolean indicating whether the goal was an own goal
    */
-  public Goal(Player scorer, Player assistant, int minute, boolean ownGoal) {
+  public Goal(Player scorer, Player assistant, String minute, boolean ownGoal) {
     this.scorer = scorer;
     this.assistant = assistant;
-    this.minute = minute;
+    setMinute(minute);
     this.ownGoal = ownGoal;
   }
 
@@ -65,7 +68,7 @@ public class Goal {
    * 
    * @return the minute in which the goal was scored
    */
-  public int getMinute() {
+  public LocalTime getMinute() {
     return minute;
   }
 
@@ -74,9 +77,8 @@ public class Goal {
    * 
    * @param minute the new minute in which the goal was scored
    */
-  public void setMinute(int minute) {
-    this.minute = minute;
-
+  public void setMinute(String minute) {
+    this.minute = LocalTime.parse(minute);
   }
 
   /**

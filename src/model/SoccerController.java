@@ -358,8 +358,9 @@ public class SoccerController {
      * @param redCards       The number of red cards of each team.
      * @return A message indicating whether the result was registered successfully.
      */
-    public String registerResult(String localName, String visitorName, String[] scorersIds, int[] scorersMinutes,
-            String[] assistantIds, boolean[] ownGoals, int[] yellowCards, int[] redCards) {
+    public String registerResult(String localName, String visitorName, String[] scorersIds, String[] scorersMinutes,
+            String[] assistantIds, boolean[] ownGoals, String[] playersIds, int[] cardTypes, String[] cardTimes,
+            String[] refereesIds) {
         Team local = searchTeam(localName);
         Team visitor = searchTeam(visitorName);
         String message = "";
@@ -384,7 +385,22 @@ public class SoccerController {
                         assistants[i] = assistant;
                     }
                 }
-                match.registerResult(scorers, assistants, scorersMinutes, ownGoals, yellowCards, redCards);
+
+                Player[] receivedCardPlayers = new Player[playersIds.length];
+                Referee[] cardReferees = new Referee[refereesIds.length];
+
+                for (int i = 0; i < playersIds.length; i++) {
+                    Player player = (Player) searchPerson(playersIds[i]);
+                    Referee referee = (Referee) searchPerson(refereesIds[i]);
+                    if (player == null || referee == null) {
+                        message = "Error: Uno de los jugadores o árbitros no existe";
+                    } else {
+                        receivedCardPlayers[i] = player;
+                        cardReferees[i] = referee;
+                    }
+                }
+                match.registerResult(scorers, assistants, scorersMinutes, ownGoals, receivedCardPlayers, cardTypes,
+                        cardTimes, cardReferees);
             }
         }
         return message;

@@ -276,7 +276,7 @@ public class Main {
         int goals = sc.nextInt();
         sc.nextLine();
         String[] scorersIds = new String[goals];
-        int[] scorersMinutes = new int[goals];
+        String[] scorersMinutes = new String[goals];
         String[] assistantIds = new String[goals];
         boolean[] ownGoals = new boolean[goals];
         for (int i = 0; i < goals; i++) {
@@ -285,8 +285,7 @@ public class Main {
             System.out.println("Ingrese el id del asistente " + (i + 1) + ":");
             assistantIds[i] = sc.nextLine();
             System.out.println("Ingrese el minuto del gol " + (i + 1) + ":");
-            scorersMinutes[i] = sc.nextInt();
-            sc.nextLine();
+            scorersMinutes[i] = sc.nextLine();
             String ownGoal = "";
             boolean isValid = false;
             do {
@@ -300,22 +299,27 @@ public class Main {
             } while (!isValid);
             ownGoals[i] = ownGoal.equalsIgnoreCase("S");
         }
-        int[] yellowCards = new int[2];
-        System.out.println("Ingrese la cantidad de tarjetas amarillas al equipo 1:");
-        yellowCards[0] = sc.nextInt();
+        System.out.println("Ingrese la cantidad de tarjetas en el partido");
+        int cards = sc.nextInt();
         sc.nextLine();
-        System.out.println("Ingrese la cantidad de tarjetas amarillas al equipo 2:");
-        yellowCards[1] = sc.nextInt();
-        sc.nextLine();
-        int[] redCards = new int[2];
-        System.out.println("Ingrese la cantidad de tarjetas rojas al equipo 1:");
-        redCards[0] = sc.nextInt();
-        sc.nextLine();
-        System.out.println("Ingrese la cantidad de tarjetas rojas al equipo 2:");
-        redCards[1] = sc.nextInt();
-        sc.nextLine();
+        String[] playersIds = new String[cards];
+        int[] cardTypes = new int[cards];
+        String[] cardMinutes = new String[cards];
+        String[] refereesIds = new String[cards];
+        for (int i = 0; i < cards; i++) {
+            System.out.println("Ingrese el id del jugador " + (i + 1) + " que recibió la tarjeta");
+            playersIds[i] = sc.nextLine();
+            System.out.println("Ingrese el tipo de tarjeta (1. Amarilla, 2. Roja)");
+            cardTypes[i] = sc.nextInt();
+            sc.nextLine();
+            System.out.println("Ingrese el minuto en el que se mostró la tarjeta");
+            cardMinutes[i] = sc.nextLine();
+            System.out.println("Ingrese el id del árbitro que mostró la tarjeta");
+            refereesIds[i] = sc.nextLine();
+        }
+
         System.out.println(controller.registerResult(localName, visitorName, scorersIds, scorersMinutes, assistantIds,
-                ownGoals, yellowCards, redCards));
+                ownGoals, playersIds, cardTypes, cardMinutes, refereesIds));
     }
 
 }

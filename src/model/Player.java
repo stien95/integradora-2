@@ -1,10 +1,15 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Player extends Person {
     // Attributes
     private int dorsal;
     // Enums
     private PlayerPosition position;
+    // Associations
+    private ArrayList<Goal> goalsAssisted;
+    private ArrayList<Goal> goalsScored;
 
     /**
      * Constructs a new Player object with the specified details.
@@ -74,6 +79,22 @@ public class Player extends Person {
                 this.position = PlayerPosition.FORWARD;
                 break;
         }
+    }
+
+    public ArrayList<Goal> getGoalsAssisted() {
+        return goalsAssisted;
+    }
+
+    public ArrayList<Goal> getGoalScored() {
+        return goalsScored;
+    }
+
+    public void addGoalAssisted(Goal goal) {
+        goalsAssisted.add(goal);
+    }
+
+    public void addGoalScored(Goal goal) {
+        goalsScored.add(goal);
     }
 
     /**

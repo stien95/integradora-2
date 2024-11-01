@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Match {
     // Attributes
     private String date;
@@ -9,9 +11,8 @@ public class Match {
     private Team local;
     private Team visitor;
     private Referee[] referees;
-    private Goal[] goals;
-    private int[] yellowCards;
-    private int[] redCards;
+    private ArrayList<Goal> goals;
+    private ArrayList<Card> cards;
 
     /**
      * Constructs a Match object with the specified local team, visitor team, date,
@@ -25,20 +26,9 @@ public class Match {
     public Match(Team local, Team visitor, String date, String time) {
         this.local = local;
         this.visitor = visitor;
-        /**
-         * Gets the local team of the match.
-         * <br/>
-         * Post: The local team of the match has been returned.
-         * 
-         * @return the local team of the match
-         */
         this.date = date;
-        /************* ✨ Codeium Command ⭐ *************/
-        /****** e1794f9a-7f2b-4ec2-806c-bdcd2a52c25c *******/
         this.time = time;
         referees = new Referee[3];
-        yellowCards = new int[2];
-        redCards = new int[2];
     }
 
     /**
@@ -172,7 +162,7 @@ public class Match {
      * 
      * @return the goals of the match
      */
-    public Goal[] getGoals() {
+    public ArrayList<Goal> getGoals() {
         return goals;
     }
 
@@ -181,7 +171,7 @@ public class Match {
      * 
      * @param goals the goals of the match
      */
-    public void setGoals(Goal[] goals) {
+    public void setGoals(ArrayList<Goal> goals) {
         this.goals = goals;
     }
 
@@ -201,8 +191,8 @@ public class Match {
      * @param redCards       The number of red cards of each team.
      * @return A message indicating whether the result was registered successfully.
      */
-    public String registerResult(Player[] scorers, Player[] assistants, int[] scorersMinutes, boolean[] ownGoals,
-            int[] yellowCards, int[] redCards) {
+    public String registerResult(Player[] scorers, Player[] assistants, String[] scorersMinutes, boolean[] ownGoals,
+            Player[] receivedCardPlayers, int[] cardTypes, String[] cardTimes, Referee[] cardReferees) {
         String message = "";
         if (scorers[0] == null) {
             message = "No hubo goles";
@@ -212,9 +202,9 @@ public class Match {
             }
         }
 
-        for (int i = 0; i < yellowCards.length; i++) {
-            this.yellowCards[i] = yellowCards[i];
-            this.redCards[i] = redCards[i];
+        for (int i = 0; i < receivedCardPlayers.length; i++) {
+            Card card = new Card(cardTypes[i], receivedCardPlayers[i], cardReferees[i], cardTimes[i]);
+            cards.add(card);
         }
         this.played = true;
         return message;
@@ -233,22 +223,10 @@ public class Match {
      * @param ownGoal   Whether the goal was an own goal or not.
      * @return A message indicating whether the goal was added or not.
      */
-    public String addGoal(Player scorer, Player assistant, int minute, boolean ownGoal) {
+    public String addGoal(Player scorer, Player assistant, String minute, boolean ownGoal) {
         Goal goal = new Goal(scorer, assistant, minute, ownGoal);
-        String message = "";
-        boolean added = false;
-        for (int i = 0; i < goals.length && !added; i++) {
-            if (goals[i] == null) {
-                goals[i] = goal;
-                added = true;
-            }
-        }
-        if (added) {
-            message = "Gol agregado";
-        } else {
-            message = "No se pueden agregar más goles";
-        }
-        return message;
+        goals.add(goal);
+        return "Gol agregado";
     }
 
     /**
