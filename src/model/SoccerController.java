@@ -405,7 +405,6 @@ public class SoccerController {
         }
         return message;
     }
-
     /**
      * Searches for a match in the tournament given the local and visitor teams.
      * <br/>
@@ -428,5 +427,28 @@ public class SoccerController {
         }
         return match;
     }
-
+    public String registerCardToPlayer(String playerId, String team,String rivalTeam, int cardType, String minute, String refereeId) {
+        String message = "";
+        Player player = (Player) searchPerson(playerId);
+        Team local = searchTeam(team);
+        Team rival = searchTeam(rivalTeam);
+        Referee referee = (Referee) searchPerson(refereeId);
+        if (player == null) {
+            message = "Error: El jugador no existe";
+        } else if (local == null) {
+            message = "Error: El equipo local no existe";
+        } else if (rival == null) {
+            message = "Error: El equipo visitante no existe";
+        } else if (referee == null) {
+            message = "Error: El árbitro no existe";
+        } else {
+            Match match = searchMatch(local, rival);
+            if (match == null) {
+                message = "Error: El partido no existe";
+            } else {
+                match.registerCard(player, cardType, minute, referee);
+            }
+        }
+        return message;
+    }
 }

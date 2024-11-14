@@ -77,8 +77,11 @@ public class Main {
                 case 7:
                     registerMatchResult();
                     break;
-                case 8:
+                case 9:
                     System.out.println("Hasta pronto");
+                    break;
+                case 8:
+                    registerCardToPlayer();
                     break;
                 default:
                     System.out.println("Opción incorrecta");
@@ -322,6 +325,25 @@ public class Main {
 
         System.out.println(controller.registerResult(localName, visitorName, scorersIds, scorersMinutes, assistantIds,
                 ownGoals, playersIds, cardTypes, cardMinutes, refereesIds));
+    }
+
+    public void registerCardToPlayer() {
+        System.out.println("-----------------------");
+        System.out.println("REGISTRAR TARJETA A JUGADOR");
+        System.out.println("Por favor, introduzca el id del jugador:");
+        String playerId = sc.nextLine();
+        System.out.println("Ingrese el equipo del jugador que recibió la tarjeta:");
+        String team = sc.nextLine();
+        System.out.println("Ingrese el equipo rival del jugador que recibió la tarjeta:");
+        String rivalTeam = sc.nextLine();
+        System.out.println("Por favor, introduzca el tipo de tarjeta (1. Amarilla, 2. Roja):");
+        int cardType = sc.nextInt();
+        sc.nextLine();
+        System.out.println("Introduzca el minuto en el que se mostró la tarjeta:");
+        String minute = sc.nextLine();
+        System.out.println("Introduzca el id del árbitro que mostró la tarjeta:");
+        String refereeId = sc.nextLine();
+        System.out.println(controller.registerCardToPlayer(playerId, team, rivalTeam, cardType, minute, refereeId));
     }
 
 }

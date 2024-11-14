@@ -295,6 +295,11 @@ public class Match {
         this.time = time;
     }
 
+    public String registerCard(Player player, int cardType, String minute, Referee referee) {
+        Card card = new Card(cardType, player, referee, minute);
+        cards.add(card);
+        return "Tarjeta registrada";
+    }
     /**
      * Returns a string representation of the match, including the names of the
      * local and visitor teams, and the date of the match.
